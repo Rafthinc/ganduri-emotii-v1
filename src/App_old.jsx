@@ -1,3 +1,4 @@
+// src/App.jsx
 import React, { useState, useEffect, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
@@ -9,30 +10,29 @@ import {
   Legend,
 } from "recharts";
 
-const STORAGE_KEY = "app2-ganduri-emotii-sanatoase-v1";
+const STORAGE_KEY = "app2-ganduri-emotii-v1";
 
+// Scenarii educative – mix: trafic, job, cuplu, despărțire, viață de zi cu zi
 const SCENARIOS = [
   {
     id: 1,
     title: "Mihai și mașina care nu pornește",
     situation:
       "Dimineața, Mihai se grăbește să ajungă la serviciu. Mașina nu mai pornește și își dă seama că va întârzia.",
-    unhealthyEmotion:
-      "Furie intensă, explozivă (emoție nesănătoasă, dezadaptativă)",
-    healthyEmotion:
-      "Frustrare / supărare moderată (emoție sănătoasă, adaptativă)",
+    irrationalEmotion: "Furie intensă (irațională)",
+    rationalEmotion: "Frustrare / supărare moderată (rațională)",
     question:
-      "De ce crezi că Mihai ajunge să simtă furie intensă, nu doar frustrare normală?",
+      "De ce crezi că Mihai simte furie atât de intensă, nu doar frustrare?",
     options: [
       {
         id: "A",
-        variant: "rational", // gând rațional → emoție sănătoasă
-        text: "„Nu îmi place deloc că întârzii, dar se mai întâmplă. O să găsesc o soluție acum și data viitoare voi verifica mașina din timp.”",
+        variant: "rational",
+        text: "Pentru că mașina nu pornește și va întârzia la muncă.",
       },
       {
         id: "B",
-        variant: "irrational", // gând irațional → emoție nesănătoasă
-        text: "„Este îngrozitor, numai mie mi se întâmplă, nu suport viața asta, totul merge prost!”",
+        variant: "irrational",
+        text: "Pentru că își spune: „Numai mie mi se întâmplă, nu mai suport viața asta, este groaznic!”.",
       },
     ],
   },
@@ -41,10 +41,10 @@ const SCENARIOS = [
     title: "Andreea și mesajul care întârzie",
     situation:
       "Andreea îi scrie partenerului un mesaj important. Trec câteva ore și el nu răspunde.",
-    unhealthyEmotion: "Anxietate intensă, aproape panică (emoție nesănătoasă)",
-    healthyEmotion: "Îngrijorare / neliniște moderată (emoție sănătoasă)",
+    irrationalEmotion: "Anxietate intensă, aproape panică (irațională)",
+    rationalEmotion: "Îngrijorare / neliniște moderată (rațională)",
     question:
-      "Ce gând transformă o îngrijorare normală într-o anxietate copleșitoare pentru Andreea?",
+      "Ce gând face ca anxietatea Andreei să devină extremă, nu doar îngrijorare normală?",
     options: [
       {
         id: "A",
@@ -54,7 +54,7 @@ const SCENARIOS = [
       {
         id: "B",
         variant: "rational",
-        text: "„Nu îmi place deloc că nu răspunde. Poate e ocupat sau supărat. Când vom vorbi, o să-i spun cum mă simt.”",
+        text: "„Poate e ocupat sau supărat. Nu îmi place, dar vom putea vorbi și clarifica.”",
       },
     ],
   },
@@ -63,20 +63,20 @@ const SCENARIOS = [
     title: "Cearta în cuplu",
     situation:
       "Într-o seară, un cuplu obosit după serviciu ajunge să ridice tonul într-o discuție despre bani.",
-    unhealthyEmotion: "Disperare / tristețe copleșitoare (emoție nesănătoasă)",
-    healthyEmotion: "Nemulțumire, tristețe moderată (emoție sănătoasă)",
+    irrationalEmotion: "Disperare / tristețe extremă (irațională)",
+    rationalEmotion: "Nemulțumire, tristețe moderată (rațională)",
     question:
-      "Unul dintre parteneri cade într-o tristețe foarte puternică după ceartă. Ce gând întreține această emoție nesănătoasă?",
+      "Unul dintre parteneri cade într-o tristețe foarte puternică. Ce gând întreține această emoție irațională?",
     options: [
       {
         id: "A",
         variant: "irrational",
-        text: "„Dacă ne certăm, înseamnă că nu mă iubește cu adevărat, relația noastră este un eșec total, nu mai are rost nimic.”",
+        text: "„Dacă ne certăm, înseamnă că nu mă iubește cu adevărat, relația noastră este un eșec total.”",
       },
       {
         id: "B",
         variant: "rational",
-        text: "„Mă doare foarte tare că ne-am certat, dar suntem obosiți și tensionați. Putem reveni asupra discuției mai târziu, mai liniștiți.”",
+        text: "„Ne certăm urât și asta mă doare, dar suntem obosiți. Putem discuta mai calm mai târziu.”",
       },
     ],
   },
@@ -85,21 +85,21 @@ const SCENARIOS = [
     title: "Despărțirea trăită diferit",
     situation:
       "După luni de tensiuni, o relație se încheie. Ambii parteneri sunt afectați, dar reacționează diferit.",
-    unhealthyEmotion:
-      "Disperare profundă, sentiment că viața s-a terminat (emoție nesănătoasă)",
-    healthyEmotion: "Tristețe, regret, dezamăgire (emoții sănătoase)",
+    irrationalEmotion:
+      "Disperare profundă, sentiment că viața s-a terminat (irațională)",
+    rationalEmotion: "Tristețe, regret, dezamăgire (emoții raționale)",
     question:
-      "Unul dintre parteneri cade într-o depresie puternică, celălalt este trist, dar funcționează. Ce gând susține emoția nesănătoasă, copleșitoare?",
+      "Unul dintre parteneri cade într-o depresie puternică, celălalt este trist, dar funcționează. Ce gând susține depresia?",
     options: [
       {
         id: "A",
         variant: "rational",
-        text: "„Îmi pare foarte rău că s-a terminat. Am pierdut ceva important pentru mine și am nevoie de timp să mă vindec.”",
+        text: "„Îmi pare foarte rău că s-a terminat. Am pierdut ceva important pentru mine.”",
       },
       {
         id: "B",
         variant: "irrational",
-        text: "„Fără el/ea, viața mea nu mai are sens, nu voi mai fi fericit niciodată, totul este distrus definitiv.”",
+        text: "„Fără el/ea, viața mea nu mai are niciun sens, nu voi mai fi fericit niciodată.”",
       },
     ],
   },
@@ -107,10 +107,9 @@ const SCENARIOS = [
     id: 5,
     title: "Traficul și furia",
     situation:
-      "În trafic, cineva îi taie brusc calea unui șofer. Nu se întâmplă niciun accident, dar șoferul se înfurie foarte tare.",
-    unhealthyEmotion:
-      "Furie extremă / „criză de nervi” (emoție nesănătoasă, disproporționată)",
-    healthyEmotion: "Iritare, enervare moderată (emoție sănătoasă)",
+      "În trafic, cineva îi taie brusc calea unui șofer. Nu se întâmplă nicio accidentare, dar șoferul se înfurie foarte tare.",
+    irrationalEmotion: "Furie extremă / „criză de nervi” (irațională)",
+    rationalEmotion: "Iritare, enervare moderată (rațională)",
     question:
       "Care gând transformă iritarea normală într-o furie exagerată, care îi strică întreaga zi?",
     options: [
@@ -122,7 +121,7 @@ const SCENARIOS = [
       {
         id: "B",
         variant: "rational",
-        text: "„A condus foarte urât, nu îmi place deloc, dar nu merită să-mi stric toată ziua pentru asta.”",
+        text: "„A condus aiurea, nu îmi place comportamentul lui, dar nu merită să-mi distrug întreaga zi.”",
       },
     ],
   },
@@ -131,17 +130,15 @@ const SCENARIOS = [
     title: "Critica la serviciu",
     situation:
       "La birou, șeful îi atrage atenția unui angajat că a greșit într-un raport.",
-    unhealthyEmotion:
-      "Rușine intensă + auto-devalorizare (emoție nesănătoasă, blocantă)",
-    healthyEmotion:
-      "Regret, supărare, poate ușoară rușine (emoții sănătoase, motivate de învățare)",
+    irrationalEmotion: "Rușine intensă + auto-devalorizare (irațională)",
+    rationalEmotion: "Regret, frustrare, poate ușoară rușine (raționale)",
     question:
       "Ce gând duce la rușine extremă și auto-etichetare, în loc de regret normal pentru o greșeală?",
     options: [
       {
         id: "A",
         variant: "rational",
-        text: "„Am greșit și nu îmi place deloc, dar pot învăța și pot fi mai atent data viitoare.”",
+        text: "„Am greșit, nu îmi place deloc, dar pot învăța și corecta data viitoare.”",
       },
       {
         id: "B",
@@ -155,6 +152,7 @@ const SCENARIOS = [
 const PIE_COLORS = ["#22d3ee", "#f97373"]; // corecte / greșite
 
 function App() {
+  // Răspunsurile utilizatorului: [{scenarioId, optionId, isCorrect}]
   const [answers, setAnswers] = useState(() => {
     if (typeof window === "undefined") return [];
     try {
@@ -166,17 +164,30 @@ function App() {
     }
   });
 
+  // Indexul scenariului curent
   const [currentIndex, setCurrentIndex] = useState(0);
+  // Opțiunea aleasă la scenariul curent
   const [selectedOptionId, setSelectedOptionId] = useState(null);
-  const [feedback, setFeedback] = useState(null);
+  const [feedback, setFeedback] = useState(null); // {isCorrect, message}
+
+  // Salvăm în localStorage de fiecare dată când se schimbă answers
+  useEffect(() => {
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(answers));
+    } catch (err) {
+      console.error("Nu pot salva în localStorage", err);
+    }
+  }, [answers]);
 
   const currentScenario = SCENARIOS[currentIndex];
 
+  // Căutăm dacă scenariul curent are deja un răspuns din istoric
   const existingAnswer = useMemo(
     () => answers.find((a) => a.scenarioId === currentScenario.id),
     [answers, currentScenario.id]
   );
 
+  // La schimbarea scenariului, resetăm starea locală (sau o încărcăm din istoric)
   useEffect(() => {
     if (existingAnswer) {
       setSelectedOptionId(existingAnswer.optionId);
@@ -190,26 +201,19 @@ function App() {
     }
   }, [currentScenario, existingAnswer]);
 
-  useEffect(() => {
-    try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(answers));
-    } catch (err) {
-      console.error("Nu pot salva în localStorage", err);
-    }
-  }, [answers]);
-
+  // Statistici pentru Recharts
   const stats = useMemo(() => {
     const total = answers.length;
     const correct = answers.filter((a) => a.isCorrect).length;
     const wrong = total - correct;
     return [
-      { name: "Ai identificat gândul irațional", value: correct },
-      { name: "Ai ales gândul rațional", value: wrong },
+      { name: "Răspunsuri corecte", value: correct },
+      { name: "Răspunsuri greșite", value: wrong },
     ];
   }, [answers]);
 
   const handleSelectOption = (optionId) => {
-    if (selectedOptionId) return;
+    if (selectedOptionId) return; // nu permitem schimbarea răspunsului
 
     const option = currentScenario.options.find((o) => o.id === optionId);
     const isCorrect = option.variant === "irrational";
@@ -252,6 +256,7 @@ function App() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 text-slate-50">
+      {/* glow background */}
       <div className="pointer-events-none fixed inset-0 z-0">
         <div className="absolute -top-24 -left-24 h-64 w-64 rounded-full bg-cyan-500/20 blur-3xl" />
         <div className="absolute top-1/3 -right-16 h-72 w-72 rounded-full bg-emerald-500/15 blur-3xl" />
@@ -285,6 +290,8 @@ function App() {
   );
 }
 
+// ---------- COMPONENTE ----------
+
 function Header({ answers }) {
   const total = answers.length;
   const correct = answers.filter((a) => a.isCorrect).length;
@@ -299,21 +306,20 @@ function Header({ answers }) {
       >
         <div className="inline-flex items-center gap-2 rounded-full border border-slate-800 bg-slate-950/80 px-3 py-1 text-[11px] text-slate-300">
           <span className="h-1.5 w-1.5 rounded-full bg-emerald-400" />
-          CBT · REBT · Gânduri → Emoții · Cuplu & viață de zi cu zi
+          CBT · RETB · Gânduri → Emoții · Cuplu & viață de zi cu zi
         </div>
         <h1 className="text-2xl font-semibold tracking-tight text-slate-50 md:text-3xl">
-          Gândurile care determină intensitatea emoțiilor
+          Gândurile care aprind emoțiile
           <span className="block bg-gradient-to-r from-cyan-400 via-emerald-400 to-indigo-400 bg-clip-text text-lg text-transparent md:text-xl">
             De ce două persoane pot simți atât de diferit în aceeași situație?
           </span>
         </h1>
         <p className="max-w-3xl text-sm text-slate-300 md:text-base">
-          În fiecare scenariu ai aceeași situație externă, dar două variante de
-          gând. Un gând este mai echilibrat și duce la o emoție sănătoasă,
-          adaptativă (frustrare, regret, îngrijorare moderată). Celălalt gând
-          este irațional, extrem, și duce la o emoție nesănătoasă, dezadaptativă
-          (furie intensă, disperare, panică). Tu alegi care gând aprinde emoția
-          nesănătoasă.
+          În fiecare scenariu ai aceeași situație, dar două variante de gând.
+          Una duce la o emoție normală, rațională (frustrare, regret,
+          îngrijorare moderată). Cealaltă duce la emoții exagerate și
+          copleșitoare (furie extremă, disperare, panică). Tu alegi care gând
+          explică emoția intensă.
         </p>
       </motion.div>
 
@@ -325,9 +331,7 @@ function Header({ answers }) {
       >
         <div className="rounded-2xl border border-slate-800 bg-slate-950/80 px-3 py-2">
           <div>Scenarii parcurse: {total}</div>
-          <div className="text-cyan-300">
-            Ai identificat gândul irațional în: {correct} scenarii
-          </div>
+          <div className="text-cyan-300">Răspunsuri corecte: {correct}</div>
         </div>
       </motion.div>
     </header>
@@ -372,25 +376,22 @@ function ScenarioCard({
       <div className="grid gap-3 text-xs text-slate-200 md:grid-cols-2">
         <div className="rounded-2xl border border-slate-800 bg-slate-950/90 p-3">
           <div className="text-[10px] font-semibold uppercase tracking-wide text-rose-300">
-            Emoție nesănătoasă (dezadaptativă)
+            Emoție irațională (exagerată)
           </div>
-          <div className="mt-1 text-[13px]">{scenario.unhealthyEmotion}</div>
+          <div className="mt-1 text-[13px]">{scenario.irrationalEmotion}</div>
           <p className="mt-1 text-[11px] text-slate-400">
-            De obicei este foarte intensă, disproporționată față de situație, te
-            blochează sau îți strică ziua. Apare când gândul este extrem,
-            absolutist, de tip „nu suport”, „este îngrozitor”, „viața nu mai are
-            sens”.
+            De obicei apare când gândul este absolutist, catastrofic sau extrem
+            („nu suport”, „este groaznic”, „viața nu mai are sens”).
           </p>
         </div>
         <div className="rounded-2xl border border-slate-800 bg-slate-950/90 p-3">
           <div className="text-[10px] font-semibold uppercase tracking-wide text-emerald-300">
-            Emoție sănătoasă (adaptativă)
+            Emoție rațională (normală)
           </div>
-          <div className="mt-1 text-[13px]">{scenario.healthyEmotion}</div>
+          <div className="mt-1 text-[13px]">{scenario.rationalEmotion}</div>
           <p className="mt-1 text-[11px] text-slate-400">
-            Este tot neplăcută, dar proporțională cu situația. Te ajută să te
-            adaptezi, să înveți, să protejezi ce e important pentru tine fără să
-            te distrugă emoțional.
+            Emoțiile raționale sunt tot neplăcute, dar nu te distrug: te ajută
+            să te adaptezi (regret, frustrare, îngrijorare moderată).
           </p>
         </div>
       </div>
@@ -400,9 +401,8 @@ function ScenarioCard({
           {scenario.question}
         </p>
         <p className="text-[11px] text-slate-400">
-          Alege gândul care generează emoția nesănătoasă, exagerată. Celălalt
-          gând, mai echilibrat, ar duce la o emoție sănătoasă, de intensitate
-          moderată.
+          Alege gândul care explică emoția exagerată (irațională). Celălalt gând
+          duce la o emoție normală, de intensitate moderată.
         </p>
       </div>
 
@@ -507,9 +507,8 @@ function StatsPanel({ stats, answers, onReset }) {
       <div className="space-y-1">
         <h2 className="text-sm font-semibold text-slate-100">Progresul tău</h2>
         <p className="text-[11px] text-slate-400">
-          Vezi de câte ori ai reușit să recunoști gândul irațional care aprinde
-          emoția nesănătoasă. Pe măsură ce devii mai conștient, vei putea să îl
-          schimbi mai ușor.
+          Vezi câte emoții iraționale ai reușit să identifici corect. Pe măsură
+          ce recunoști gândurile extreme, devine mai ușor să le schimbi.
         </p>
       </div>
 
@@ -562,10 +561,10 @@ function StatsPanel({ stats, answers, onReset }) {
       <div className="space-y-1 text-[11px] text-slate-300">
         <div>Total scenarii răspunse: {total}</div>
         <div className="text-emerald-300">
-          Ai identificat gândul irațional (emoție nesănătoasă): {correct}
+          Răspunsuri corecte (ai identificat gândul irațional): {correct}
         </div>
         <div className="text-rose-300">
-          Ai ales gândul rațional (emoție sănătoasă): {wrong}
+          Răspunsuri greșite (ai ales gândul rațional): {wrong}
         </div>
       </div>
 
@@ -584,23 +583,19 @@ function PsychoEducationSection() {
   return (
     <section className="mb-6 space-y-4 rounded-3xl border border-slate-800 bg-slate-950/80 p-5 text-xs text-slate-300 shadow-xl shadow-slate-950/80">
       <h2 className="text-sm font-semibold text-slate-100">
-        Emoții sănătoase vs emoții nesănătoase (în CBT și REBT)
+        Emoții raționale vs emoții iraționale (modelul RETB)
       </h2>
       <p>
-        În CBT și în psihoterapia rațional-emotivă (REBT), nu vorbim despre
-        „emoții bune” sau „emoții rele”, ci despre{" "}
-        <span className="text-emerald-300">emoții sănătoase (adaptative)</span>{" "}
-        și{" "}
-        <span className="text-rose-300">
-          emoții nesănătoase (dezadaptative)
-        </span>
-        . Emoțiile sunt influențate de felul în care interpretăm situațiile,
-        adică de gândurile noastre.
+        În psihoterapia rațional-emotivă (RETB), distingem între emoțiile
+        <span className="text-emerald-300"> raționale</span> și cele
+        <span className="text-rose-300"> iraționale</span>. Ambele pot fi
+        neplăcute, dar se deosebesc prin intensitate și prin felul în care te
+        ajută (sau îți blochează) adaptarea.
       </p>
       <div className="grid gap-4 md:grid-cols-2">
         <div className="rounded-2xl border border-slate-800 bg-slate-950/90 p-3">
           <h3 className="mb-1 text-[12px] font-semibold text-emerald-300">
-            Emoții sănătoase (adaptative)
+            Exemple de emoții raționale (normale)
           </h3>
           <ul className="space-y-1 list-disc pl-4">
             <li>Regret după o greșeală („Aș fi preferat să nu fac asta.”)</li>
@@ -609,24 +604,24 @@ function PsychoEducationSection() {
             <li>Tristețe normală după o despărțire sau pierdere.</li>
           </ul>
           <p className="mt-2 text-[11px] text-slate-400">
-            Gânduri asociate: „Nu îmi place ce s-a întâmplat, dar pot suporta,
-            pot învăța și pot face ceva în privința asta.”
+            Gânduri tipice: „Nu îmi place ce s-a întâmplat, dar pot suporta și
+            pot face ceva în privința asta.”
           </p>
         </div>
         <div className="rounded-2xl border border-slate-800 bg-slate-950/90 p-3">
           <h3 className="mb-1 text-[12px] font-semibold text-rose-300">
-            Emoții nesănătoase (dezadaptative)
+            Exemple de emoții iraționale (exagerate)
           </h3>
           <ul className="space-y-1 list-disc pl-4">
             <li>Furie extremă în trafic sau într-o discuție obișnuită.</li>
             <li>
               Disperare totală după o despărțire („Viața mea s-a terminat.”)
             </li>
-            <li>Rușine intensă („Sunt un nimic, un ratat.”)</li>
+            <li>Rușine intensă („Sunt un ratat, nu valorez nimic.”)</li>
             <li>Panica extremă în situații de viață normale.</li>
           </ul>
           <p className="mt-2 text-[11px] text-slate-400">
-            Gânduri asociate: „Este groaznic, nu ar trebui să fie așa, nu pot
+            Gânduri tipice: „Este groaznic, nu ar trebui să fie așa, nu pot
             suporta, viața nu mai are sens dacă se întâmplă asta.”
           </p>
         </div>
@@ -634,17 +629,17 @@ function PsychoEducationSection() {
       <p>
         În această aplicație,{" "}
         <span className="text-rose-300">răspunsul corect</span> este gândul
-        irațional care explică apariția unei emoții nesănătoase, dezadaptative.
-        Celălalt gând este mai rațional și ar duce la o emoție{" "}
-        <span className="text-emerald-300">
-          sănătoasă, proporțională cu situația
-        </span>
-        . În aplicația următoare veți exersa cum să reformulați pas cu pas
-        gândurile iraționale.
+        irațional care explică emoția extremă. Celălalt gând, mai echilibrat, ar
+        duce la o emoție
+        <span className="text-emerald-300"> rațională</span>, de intensitate
+        normală. În aplicația următoare vom învăța cum să înlocuim pas cu pas
+        gândurile iraționale cu variante mai sănătoase.
       </p>
     </section>
   );
 }
+
+// ---------- logica explicatiei ----------
 
 function buildFeedbackMessage(scenario, answer) {
   const chosen = scenario.options.find((o) => o.id === answer.optionId);
@@ -657,44 +652,36 @@ function buildFeedbackMessage(scenario, answer) {
     return (
       <>
         <span className="font-semibold">
-          Corect. Gândul pe care l-ai ales este irațional și aprinde emoția
-          nesănătoasă: {scenario.unhealthyEmotion.toLowerCase()}.
+          Corect. Emoția irațională ({scenario.irrationalEmotion.toLowerCase()})
+          este întreținută de gândul: „{irrationalOpt.text}”
         </span>
         <br />
         <br />
-        Observă cum gândul: „{irrationalOpt.text}” este extrem, absolutist,
-        catastrofic. Dacă persoana ar gândi mai degrabă:
-        <br />
-        <span className="italic">„{rationalOpt.text}”</span>, emoția ar deveni
-        una sănătoasă, de tip{" "}
-        <span className="underline">{scenario.healthyEmotion}</span>, nu ar mai
-        ajunge la {scenario.unhealthyEmotion}.
+        Observă cum acest gând este absolutist și catastrofic. Dacă persoana ar
+        gândi mai degrabă: „{rationalOpt.text}”, emoția ar deveni una rațională,
+        de tip <span className="underline">{scenario.rationalEmotion}</span>, nu
+        ar mai ajunge la {scenario.irrationalEmotion}.
       </>
     );
   } else {
     return (
       <>
         <span className="font-semibold">
-          Aproape. Gândul ales de tine este mai degrabă rațional și ar duce la o
-          emoție sănătoasă, adaptativă.
-        </span>
-        <br />
-        <br />
-        Gândul: „{chosen.text}” exprimă nemulțumire sau tristețe, dar nu este
-        catastrofic. O persoană care gândește astfel ar simți mai degrabă{" "}
+          Aproape. Gândul ales de tine este mai degrabă rațional:
+        </span>{" "}
+        „{chosen.text}”. El ar duce la o emoție
         <span className="text-emerald-200">
-          {scenario.healthyEmotion.toLowerCase()}
+          {" "}
+          {scenario.rationalEmotion.toLowerCase()}
         </span>
-        .
+        , adică neplăcută, dar suportabilă.
         <br />
         <br />
-        Emoția nesănătoasă, copleșitoare (
-        {scenario.unhealthyEmotion.toLowerCase()}) este susținută mai degrabă de
-        gândul:
-        <br />
-        <span className="italic">„{irrationalOpt.text}”</span>. Acesta este
-        gândul exagerat, absolutist, care „aprinde focul”. În aplicațiile
-        următoare vei exersa cum să îl reformulezi în variante mai echilibrate.
+        Emoția irațională, foarte intensă (
+        {scenario.irrationalEmotion.toLowerCase()}) este susținută mai degrabă
+        de gândul: „{irrationalOpt.text}”. Acela este gândul exagerat,
+        absolutist, care „aprinde focul”. În aplicațiile următoare vom exersa
+        cum să îl înlocuim cu variante mai echilibrate.
       </>
     );
   }
