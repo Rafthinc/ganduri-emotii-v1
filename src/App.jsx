@@ -596,6 +596,14 @@ function PsychoEducationSection() {
         </span>
         . Emoțiile sunt influențate de felul în care interpretăm situațiile,
         adică de gândurile noastre.
+        <span className="text-rose-300">
+          {" "}
+          Cu cât gândurile sunt mai iraționale, extreme și absolutiste,
+        </span>
+        <span className="text-rose-500">
+          {" "}
+          cu atât emoțiile devin mai nesănătoase, copleșitoare și dezadaptative.
+        </span>
       </p>
       <div className="grid gap-4 md:grid-cols-2">
         <div className="rounded-2xl border border-slate-800 bg-slate-950/90 p-3">
